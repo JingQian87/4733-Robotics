@@ -42,7 +42,7 @@ $$
 
 ## Problem 3
 
-(a) From the forward kinematics, we could get the linear velocity Jacobian:
+**(a)** From the forward kinematics, we could get the linear velocity Jacobian:
 $$
 \begin{equation}
 \begin{split}
@@ -68,7 +68,7 @@ We could get the following DH parameter table:
 | 2    | 0     | -90        | $d_2$+2 | 0             |
 | 3    | 2     | 0          | 0       | $\theta_3$-90 |
 
-From the DH parameter table, we could get homogeneous transformations between frame 0 and $i$. We know that $z_i^0$ is the top three elements from $T_i^0$. Since the first and third joints are revolute and joint 2 is prismatic, the angular velocity Jacobian is:
+From the DH parameter table, we could get homogeneous transformations between frame 0 and $i$. We know that $z_i^0$ is the top three elements of the third column from $T_i^0$. Since the first and third joints are revolute and joint 2 is prismatic, the angular velocity Jacobian is:
 $$
 \begin{split}
 J_0 &= \begin{bmatrix}
@@ -94,7 +94,8 @@ J =\begin{bmatrix}
 $$
 
 
-(b) The determination of the three non-zero rows of $J$ is:
+
+**(b)** The determination of the three non-zero rows of $J$ is:
 $$
 \mathrm{det}\begin{bmatrix}
 -(d_2+2)s_1-c_1-2s_{13} & c_1 & -2s_{23} \\
@@ -107,7 +108,7 @@ When $d_2 = -2​$, the above determination turns to 0, which means that wrist s
 
 
 
-(c) The problem is underconstrained because there are only two desired velocities with three joints. The Jacobian is $2\times3​$:
+**(c)** The problem is underconstrained because there are only two desired velocities with three joints. The Jacobian is $2\times3$:
 $$
 J = \begin{bmatrix}
 -(d_2+2)s_1-c_1-2s_{13} & c_1 & -2s_{23} \\
@@ -148,7 +149,7 @@ The right pseudo-inverse $J_r^+$ minimizes a cost function in joint velocities: 
 
 
 
-(d)  All possible solutions to the above problem including the homogeneous solution is: $\dot{q} = J_r^+ v_d + (I-J_r^+J)\dot{q}_0​$. So:
+**(d)** All possible solutions to the above problem including the homogeneous solution is: $\dot{q} = J_r^+ v_d + (I-J_r^+J)\dot{q}_0$. So:
 $$
 \bold{P} =I-J_r^+J =I - \begin{bmatrix}
 -0.015 & 0.216 \\
@@ -169,7 +170,7 @@ $\textcolor{red}{Here不确定！}$ $\dot{q}_0$ is arbitrary solutions to $v_d=J
 
 
 
-(e) The problem is overconstrained because there are more specifications than DOFs. Jacobian has 6 rows and 3 columns.
+**(e)** The problem is overconstrained because there are more specifications than DOFs. Jacobian has 6 rows and 3 columns.
 $$
 J =\begin{bmatrix}
 -2-1.5\sqrt{3} & 0.5\sqrt{3} & -\sqrt{3} \\
@@ -214,7 +215,7 @@ The left pseudo-inverse tries to minimize the resulting error:  $g(\dot{q},v_d) 
 
 
 
-(f) Using the joint solution in the previous part, we could get the actual end effector velocities as:
+**(f)** Using the joint solution in the previous part, we could get the actual end effector velocities as:
 $$
 v_e = J\dot{q}^* =\begin{bmatrix}
 -2-1.5\sqrt{3} & 0.5\sqrt{3} & -\sqrt{3} \\
@@ -243,3 +244,121 @@ Comparing with the workspace velocities, we could find that $\dot{z},\ w_x$ coul
 
 ## Problem 4
 
+(a) Since the final velocity is 1 rad/s and the deceleration rate is 2 rad/$\rm{s}^2$, if with another $t_m = \frac{1}{2}$s, the velocity at $t=t_f+t_m$ will be 0 rad/s. Then the modified position, velocity and acceleration profiles will be the same as the LSPD we learnt in class.
+
+Using $t_d$ to denote the time the joint begins to decelerate, we have:
+$$
+2 = q(t_f) = 0.5 * \ddot{q}_c* t_c^2*2 +  \ddot{q}_c*t_c*(t_d-t_c) - 0.5* \ddot{q}_c*t_m^2=2t_ct_d-0.25
+$$
+
+$$
+\left\{
+\begin{array}{lr}
+t_c*t_d=\frac{9}{8} \\
+2.5-t_d = t_c
+\end{array}
+\right.
+$$
+
+$$
+t_c = \frac{5-\sqrt{7}}{4},\ t_d = \frac{5+\sqrt{7}}{4}
+$$
+
+We ignore the reverse solution because $t_c <t_d$.
+
+So we have 
+$$
+\dot{q}(t_c) = \ddot{q}_ct_c \approx 1.18\ \rm{rad/s},\\
+q(t_c) = 0.5 \ddot{q}_c t_c^2 \approx 0.35\ \rm{rad},\\
+q(t_d) = 2+0.5*2*0.5^2-q(t_c) \approx 1.9\ \rm{rad}.
+$$
+The profiles are: ![IMG_1221](/Users/mac/Desktop/IMG_1221.png)
+
+
+
+(b) Knowing that $\dot{q}_c=1.5$ rad/s and final velocity is $\dot{q}_f = 1$ rad/s, similar to previous part, we could expolate the trajectory to the LSPD we learnt in class. Still use $t_d$ to denote the deceleration time.
+$$
+\left\{
+\begin{array}{lr}
+\frac{2-t_d}{t_c} = \frac{1.5-1}{1.5} \\
+2 = 0.5\dot{q_c}t_c - (1-(\frac{2}{3})^2)*(0.5\dot{q_c}t_c)+\dot{q_c}(t_d-t_c)
+\end{array}
+\right.
+$$
+And we could get the solution:$t_c = 1.2\ \rm{s},\ t_d=1.6\ \rm{s}.$
+
+So we have: $\ddot{q}_c=\dot{q}_c/t_c=1.25\ \rm{rad/s^2}$, $q_c = 0.5\dot{q_c}t_c$ = 0.9 rad, $q(t_d) = q_c+\dot{q}_c(t_d-t_c) = $1.5 rad.
+
+The profiles are:
+
+![IMG_4377](/Users/mac/Desktop/4733-Robotics/HW2/IMG_4377.png)
+
+
+
+## Problem 5
+
+(a) From the DH parameters, we could get the transformation matrix:
+$$
+A_1^0 = \begin{bmatrix}
+c_1 & -s_1 & 0 & 0 \\
+s_1 & c_1 & 0 & 0  \\
+0 & 0 & 1 & 0.333 \\
+0&0&0&1
+\end{bmatrix}, \
+A_2^1 = \begin{bmatrix}
+c_2&0&-s_2&0 \\
+s_2&0&c_2& 0  \\
+0&-1&0&0 \\
+0&0&0&1
+\end{bmatrix},\ 
+A_3^2 = \begin{bmatrix}
+c_3&0&s_3&0 \\
+s_3&0&-c_3& 0  \\
+0&1&0&0.316 \\
+0&0&0&1
+\end{bmatrix}
+$$
+
+$$
+A_4^3 = \begin{bmatrix}
+c_4&0&s_4&0.0825c_4 \\
+s_4&0&-c_4&0.0825s_4  \\
+0&1&0&0 \\
+0&0&0&1
+\end{bmatrix}, \
+A_5^4 = \begin{bmatrix}
+c_5&0&-s_5&-0.0825c_5 \\
+s_5&0&c_5&-0.0825s_5\\
+0&-1&0&0.384 \\
+0&0&0&1
+\end{bmatrix},\ 
+A_6^5 = \begin{bmatrix}
+c_6&0&s_6&0 \\
+s_6&0&-c_6& 0  \\
+0&1&0&0 \\
+0&0&0&1
+\end{bmatrix}
+$$
+
+$$
+A_7^6 = \begin{bmatrix}
+c_7&0&s_7&0.088c_7 \\
+s_7&0&-c_7&0.088s_7  \\
+0&1&0&0 \\
+0&0&0&1
+\end{bmatrix}
+$$
+
+The forward kinematics are as follows:
+
+
+
+
+
+
+
+−(sin(d)sin(a+b)−cos(c)cos(d)cos(a+b))cos(e)+sin(c)sin(e)cos(a+b)(sin(d)cos(a+b)+sin(a+b)cos(c)cos(d))cos(e)+sin(c)sin(e)sin(a+b)
+
+−sin(c)cos(d)cos(e)+sin(e)cos(c)
+
+0
