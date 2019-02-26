@@ -1,4 +1,6 @@
-# COMS W4733, HW2 — Jing Qian (jq2282)
+# COMS W4733, HW2 
+
+### 									Jing Qian (jq2282)
 
 ## Problem 1
 
@@ -339,9 +341,9 @@ $$
 q(t_c) = 0.5 \ddot{q}_c t_c^2 \approx 0.35\ \rm{rad},\\
 q(t_d) = 2+0.5*2*0.5^2-q(t_c) \approx 1.9\ \rm{rad}.
 $$
-The profiles are: ![IMG_1221](/Users/mac/Desktop/IMG_1221.png)
+The profiles are: 
 
-
+![IMG_1221](/Users/mac/Desktop/4733-Robotics/HW2/IMG_1221.png)
 
 **(b)** Knowing that $\dot{q}_c=1.5$ rad/s and final velocity is $\dot{q}_f = 1$ rad/s, similar to previous part, we could expolate the trajectory to the LSPD we learnt in class. Still use $t_d$ to denote the deceleration time.
 $$
@@ -417,4 +419,32 @@ s_7&0&-c_7&0.088s_7  \\
 $$
 
 Because of the computation complexity, we calculate the linear velocity Jacobian with $[J_{Pi}] = z_{i-1}^0\times(p_e-p_{i-1})$ and angular velocity Jacobian with $[J_{Oi}] = z_{i-1}^0$. Corresponding code is provided.
+
+
+
+**(b)** The plot of error and 3D trajectory plot are given as following:
+
+![error_simple](/Users/mac/Desktop/4733-Robotics/HW2/error_simple.png)
+
+![postion_simple](/Users/mac/Desktop/4733-Robotics/HW2/postion_simple.png)
+
+The algorithm runs fast when I choose error threshold =0.01 and converges fast. But the result is a little zigzag. I didn't use any weighting parameters. From the error plot, we could see that it converges around 300 times.The algorithm didn't run into singularities.
+
+
+
+**(b)** The manipulator didn't run into singularities. The solution of pseudoinverse method is very unstable while the damped is quite smooth. Both methods take more time to run than simple Jacobian transpose. Figures see attached.
+
+![error_pseudoinverse](/Users/mac/Desktop/4733-Robotics/HW2/error_pseudoinverse.png)
+
+![error_pseudoinverse](/Users/mac/Desktop/4733-Robotics/HW2/postion_pseudoinverse.png)
+
+
+
+![error_damp](/Users/mac/Desktop/4733-Robotics/HW2/error_damp.png)
+
+
+
+![postion_damp](/Users/mac/Desktop/4733-Robotics/HW2/postion_damp.png)
+
+
 
