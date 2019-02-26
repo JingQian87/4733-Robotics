@@ -2,15 +2,44 @@
 
 ## Problem 1
 
+**(a)** There are infinite solutions for this problem if we don't care about the angle. Because there is a laser in the end, like a prismatic joint with infinite range of length. Solving functions with three parameters $\theta_1, \theta_2, d_3$ with only two constraints $p_x$ and $p_y$ will lead to infinite solutions.
+
+No, the number of solutions doesn't depend on $l_1$ or $l_2$.
 
 
 
+**(b)** We could model the laser as a third prismatic joint with length $d_3$. So we try to solve $(\theta_1, \theta_2, d_3)$ with equations of $(p_x, p_y, \phi)$:
+$$
+\left\{
+\begin{array}{lr}
+\phi = \theta_1+\theta_2 \\
+p_x = l_1c_1+(l_2+d_3)c_{12}\\
+p_y = l_1s_1+(l_2+d_3)s_{12}
+\end{array}
+\right.
+$$
+We could get $\theta_1​$ and $$d_3​$$ from:
+$$
+\left\{
+\begin{array}{lr}
+p_x = l_1c_1+(l_2+d_3)c_{\phi}\\
+p_y = l_1s_1+(l_2+d_3)s_{\phi}
+\end{array}
+\right.
+$$
+Then use $\theta_2 = \phi-\theta_1$ . 
+
+
+
+**(c)** The robots' workspace is bound by the angle $\phi$ at $(p_x, p_y)$. For point $p_x^2+p_y^2>l_1^2$, we do tangents from this point to the circle with raidus $l_1$. If $\phi$ points to a direction in the region C, there are solutions. But for regions, A, B and D, there is no solution. 
+
+![IMG_0527](/Users/mac/Desktop/4733-Robotics/HW2/IMG_0527.png)
 
 
 
 ## Problem 2
 
-(a)
+**(a)**
 $$
 \begin{equation}
 \begin{split}
@@ -36,9 +65,47 @@ $$
 | 2    | $L_2$ | 0          | 0     | $\theta_2$ |
 | 3    | $L_3$ | 0          | 0     | $\theta_3$ |
 
+From the DH parameter table, we could get homogeneous transformations between frame 0 and $i​$. We know that $z_i^0​$ is the top three elements of the third column from $T_i^0​$. The angular velocity Jacobian is:
+
+$$
+\begin{split}
+J_0 &= \begin{bmatrix}
+z_0^0 & z_1^0 & z_2^0
+\end{bmatrix}\\
+&= \begin{bmatrix}
+0 & s_1 & s_1\\
+0 & -c_1 & -c_1\\
+1 & 0 & 0
+\end{bmatrix}
+\end{split}
+$$
+So the full Jacobian matrix is:
+$$
+J=\begin{bmatrix}
+-(L_1+L_2c_2+L_3c_{23})s_1 & -L_2c_1s_2-L_3c_1s_{23} & -L_3c_1s_{23} \\
+ (L_1+L_2c_2+L_3c_{23})c_1 & -L_2s_1s_2-L_3s_1s_{23} & -L_3s_1s_{23}  \\
+0 & L_2c_2+L_3c_{23} & L_3c_{23}\\
+0 & s_1 & s_1\\
+0 & -c_1 & -c_1\\
+1 & 0 & 0
+\end{bmatrix}
+$$
+
+
+**(b)** The determination of $J_P$ is:
+$$
+\mathrm{det}(J_P)
+=-l_2l_3s_3(l_1+l_2c_2+l_3c_{23})
+$$
+When $s_3=0$ or $l_1+l_2c_2+l_3c_{23}=0$, $\mathrm{det}(J_p)=0$ and singularities occur.
 
 
 
+**(c)** When $\theta_3=0$ or $\pi$, $s_3=0$, elbow singularity occurs.
+
+When $l_1+l_2c_2+l_3c_{23}=0$, shoulder singularity occurs.
+
+![IMG_3157](/Users/mac/Desktop/4733-Robotics/HW2/IMG_3157.png)
 
 ## Problem 3
 
@@ -68,7 +135,7 @@ We could get the following DH parameter table:
 | 2    | 0     | -90        | $d_2$+2 | 0             |
 | 3    | 2     | 0          | 0       | $\theta_3$-90 |
 
-From the DH parameter table, we could get homogeneous transformations between frame 0 and $i$. We know that $z_i^0$ is the top three elements of the third column from $T_i^0$. Since the first and third joints are revolute and joint 2 is prismatic, the angular velocity Jacobian is:
+From the DH parameter table, we could get homogeneous transformations between frame 0 and $i​$. We know that $z_i^0​$ is the top three elements of the third column from $T_i^0​$. Since the first and third joints are revolute and joint 2 is prismatic, the angular velocity Jacobian is:
 $$
 \begin{split}
 J_0 &= \begin{bmatrix}
@@ -104,7 +171,7 @@ $$
 \end{bmatrix}
 =-d_2-2
 $$
-When $d_2 = -2​$, the above determination turns to 0, which means that wrist singularity occurs.$\textcolor{red}{???????????????不确定}​$.
+When $d_2 = -2$, the above determination turns to 0, singularities occurs. We couldn't differentiate the contribution of $\theta_1$ and $\theta_3$.
 
 
 
@@ -145,7 +212,7 @@ $$
 \end{bmatrix}
 $$
 
-The right pseudo-inverse $J_r^+$ minimizes a cost function in joint velocities: $g(\dot{q},v_d) = \frac{1}{2}(v_d - J\dot{q})^T(v_d - J\dot{q})$.$\textcolor{red}{???????????????不确定}​$.
+The right pseudo-inverse $J_r^+​$ minimizes a cost function in joint velocities: $g(\dot{q},v_d) = \frac{1}{2}(v_d - J\dot{q})^T(v_d - J\dot{q})​$.
 
 
 
@@ -166,7 +233,7 @@ $$
 -0.244 & 0.314 & 0.804
 \end{bmatrix}
 $$
-$\textcolor{red}{Here不确定！}$ $\dot{q}_0$ is arbitrary solutions to $v_d=J\dot{q}$.
+ $\dot{q}_0$ is arbitrary solutions to $v_d=J\dot{q}$.
 
 
 
@@ -211,7 +278,7 @@ $$
 \end{bmatrix}
 $$
 
-The left pseudo-inverse tries to minimize the resulting error:  $g(\dot{q},v_d) = \frac{1}{2}(v_d - J\dot{q})^T(v_d - J\dot{q})$.$\textcolor{red}{???????????????不确定}$.
+The left pseudo-inverse tries to minimize the resulting error:  $g(\dot{q},v_d) = \frac{1}{2}(v_d - J\dot{q})^T(v_d - J\dot{q})$.
 
 
 
@@ -244,7 +311,7 @@ Comparing with the workspace velocities, we could find that $\dot{z},\ w_x$ coul
 
 ## Problem 4
 
-(a) Since the final velocity is 1 rad/s and the deceleration rate is 2 rad/$\rm{s}^2$, if with another $t_m = \frac{1}{2}$s, the velocity at $t=t_f+t_m$ will be 0 rad/s. Then the modified position, velocity and acceleration profiles will be the same as the LSPD we learnt in class.
+**(a)** Since the final velocity is 1 rad/s and the deceleration rate is 2 rad/$\rm{s}^2$, if with another $t_m = \frac{1}{2}$s, the velocity at $t=t_f+t_m​$ will be 0 rad/s. Then the modified position, velocity and acceleration profiles will be the same as the LSPD we learnt in class.
 
 Using $t_d$ to denote the time the joint begins to decelerate, we have:
 $$
@@ -276,7 +343,7 @@ The profiles are: ![IMG_1221](/Users/mac/Desktop/IMG_1221.png)
 
 
 
-(b) Knowing that $\dot{q}_c=1.5$ rad/s and final velocity is $\dot{q}_f = 1$ rad/s, similar to previous part, we could expolate the trajectory to the LSPD we learnt in class. Still use $t_d$ to denote the deceleration time.
+**(b)** Knowing that $\dot{q}_c=1.5$ rad/s and final velocity is $\dot{q}_f = 1$ rad/s, similar to previous part, we could expolate the trajectory to the LSPD we learnt in class. Still use $t_d$ to denote the deceleration time.
 $$
 \left\{
 \begin{array}{lr}
@@ -297,7 +364,7 @@ The profiles are:
 
 ## Problem 5
 
-(a) From the DH parameters, we could get the transformation matrix:
+**(a)** From the DH parameters, we could get the transformation matrix:
 $$
 A_1^0 = \begin{bmatrix}
 c_1 & -s_1 & 0 & 0 \\
@@ -349,16 +416,5 @@ s_7&0&-c_7&0.088s_7  \\
 \end{bmatrix}
 $$
 
-The forward kinematics are as follows:
+Because of the computation complexity, we calculate the linear velocity Jacobian with $[J_{Pi}] = z_{i-1}^0\times(p_e-p_{i-1})$ and angular velocity Jacobian with $[J_{Oi}] = z_{i-1}^0$. Corresponding code is provided.
 
-
-
-
-
-
-
-−(sin(d)sin(a+b)−cos(c)cos(d)cos(a+b))cos(e)+sin(c)sin(e)cos(a+b)(sin(d)cos(a+b)+sin(a+b)cos(c)cos(d))cos(e)+sin(c)sin(e)sin(a+b)
-
-−sin(c)cos(d)cos(e)+sin(e)cos(c)
-
-0
