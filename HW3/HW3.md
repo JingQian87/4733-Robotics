@@ -4,7 +4,9 @@
 
 ## PROBLEM 1
 
-**(a)** $ \begin{bmatrix}
+**(a)** The coordinates $(x',y',\theta')^T$ could be expressed in terms of the link length $L$ and configuration variables $x, y, \theta,$ and $\phi$:
+$$
+\begin{bmatrix}
 x' \\
 y' \\
 \theta' 
@@ -12,12 +14,21 @@ y' \\
 x+\frac{L}{2}\cos\theta +\frac{L}{2}\cos(\theta+\phi)\\
 y+\frac{L}{2}\sin\theta +\frac{L}{2}\sin(\theta+\phi)\\
 \theta+\phi 
-\end{bmatrix}​$
-
-So the second link's no-slip constraints $\dot{x}'\sin\theta'-\dot{y}'\cos\theta' =0$ could be expressed in terms of these variables and their velocity:
-
-$\dot{x}\sin(\theta+\phi)-\dot{y}\cos(\theta+\phi) - \dot{\theta}\frac{L}{2}\cos\phi-\frac{L}{2}(\dot{\theta}+\dot{\phi})=0.​$
-
+\end{bmatrix}
+$$
+Then 
+$$
+\dot{x}' = \dot{x} - \frac{L}{2}\dot{\theta}\sin\theta - \frac{L}{2}(\dot{\theta}+\dot{\phi})\sin(\theta+\phi)\\
+\dot{y}' = \dot{y} + \frac{L}{2}\dot{\theta}\cos\theta + \frac{L}{2}(\dot{\theta}+\dot{\phi})\cos(\theta+\phi)
+$$
+So the second link's no-slip constraints $\dot{x}'\sin\theta'-\dot{y}'\cos\theta' =0​$ could be expressed in terms of these variables and their velocity:
+$$
+\dot{x}\sin(\theta+\phi)-\dot{y}\cos(\theta+\phi) - \dot{\theta}L\cos^2\phi-\frac{L}{2}(\dot{\theta}+\dot{\phi})=0.
+$$
+Or:
+$$
+\dot{x}\sin(\theta+\phi)-\dot{y}\cos(\theta+\phi) - \dot{\theta}L\cos^2\frac{\phi}{2}-\dot{\phi}\frac{L}{2}=0.
+$$
 
 
 **(b)** The robot's three constraints could be expressed in Pfaffian form $A^T(q)\dot{q} = 0$:
@@ -35,11 +46,8 @@ v\\
 \dot{\phi}
 \end{bmatrix}=\mathbf{0}
 $$
-**<u>什么叫the set of all allowed velocities?</u>**
+Since there are three constraints and 5 configuration velocities, there are 2 controllable degrees of freedom. Set the two controllable degrees of freedom to $v$ and $\dot{\phi}$,  we have the set of all allowed velocities:
 
-Since there are three constraints and 5 configuration velocities, there are 2 controllable degrees of freedom. They correspond to $v$ and $\dot{\phi}$. <u>**其实也可以选别的啊，比如$(\dot{\theta,\dot{\phi}})$?</u>**
-
-Then we have:
 $$
 \begin{bmatrix}
 \dot{x}\\
@@ -62,7 +70,8 @@ v\\
 $$
 
 
-**(c)** Given $\dot{x}(t)​$ and $\dot{y}(t)​$, from result of 1.(b), we have $v = \sqrt{\dot{x}^2+\dot{y}^2}​$.
+
+**(c)** Given $\dot{x}(t)$ and $\dot{y}(t)$, from result of 1.(b), we have $v = \sqrt{\dot{x}^2+\dot{y}^2}$.
 
 Since $\dot{\theta} = \frac{\ddot{y}\dot{x}-\ddot{x}\dot{y}}{\dot{x}^2+\dot{y}^2}​$, we have:
 $$
@@ -95,11 +104,18 @@ $$
 $$
 Use Python **odeint** to integrate the above ODES numerically, we could have the $x(t)-y(t)$ plot:
 
+![xy0.3](/Users/mac/Desktop/Robotics/HW3/xy0.3.png)
+
+
+
+![v](/Users/mac/Desktop/Robotics/HW3/v.png)
+
 
 
 **(b)**
 
-
+![xy0.6](/Users/mac/Desktop/Robotics/HW3/xy0.6.png)
 
 **(c)**
 
+![xy1](/Users/mac/Desktop/Robotics/HW3/xy1.png)
