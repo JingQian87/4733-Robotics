@@ -23,7 +23,7 @@ $$
 $$
 So the second link's no-slip constraints $\dot{x}'\sin\theta'-\dot{y}'\cos\theta' =0​$ could be expressed in terms of these variables and their velocity:
 $$
-\dot{x}\sin(\theta+\phi)-\dot{y}\cos(\theta+\phi) - \dot{\theta}L\cos^2\phi-\frac{L}{2}(\dot{\theta}+\dot{\phi})=0.
+\dot{x}\sin(\theta+\phi)-\dot{y}\cos(\theta+\phi) - \dot{\theta}\frac{L}{2}\cos\phi-\frac{L}{2}(\dot{\theta}+\dot{\phi})=0.
 $$
 Or:
 $$
@@ -106,9 +106,13 @@ Use Python **odeint** to integrate the above ODES numerically, we could have the
 
 ![xy0.3](/Users/mac/Desktop/Robotics/HW3/xy0.3.png)
 
-
+The two velocity inputs, $v = 1$ m/s, we only change the steering rate $\dot{\phi}(t) = 0.3 \sin(t)$. So $\phi(t) = 0.3(1-\cos(t))$, which means the bicycle will always turn left with periodically changing steering rate. Since the rate is 0.3, the bicycle changes steering rate slowly, which generate the $x(t)-y(t)​$ plot above.
 
 ![v](/Users/mac/Desktop/Robotics/HW3/v.png)
+
+Above is the $\dot{x}(t)-\dot{y}(t)$ plot, which is a circle with (0, 0) as origin and radius = 1, which verify that $v=1=\sqrt{\dot{x}(t)^2+\dot{y}(t)^2}$.
+
+![v2](/Users/mac/Desktop/Robotics/HW3/v2.png)
 
 
 
@@ -116,6 +120,18 @@ Use Python **odeint** to integrate the above ODES numerically, we could have the
 
 ![xy0.6](/Users/mac/Desktop/Robotics/HW3/xy0.6.png)
 
+Above is the $x(t)-y(t)$ plot when the steering rate $\dot{\phi}(t) = 0.6 \sin(t)$. So $\phi(t) = 0.6(1-\cos(t))$, which means the bicycle will always turn left with periodically changing steering rate. 
+
+Since the rate is 0.6, the bicycle changes steering rate faster than 2.a., which generates more and smaller loops as the plot above.
+
+
+
 **(c)**
 
 ![xy1](/Users/mac/Desktop/Robotics/HW3/xy1.png)
+
+Above is the $x(t)-y(t)​$ plot when the steering rate $\dot{\phi}(t) = \sin(t)​$. So $\phi(t) = 1-\cos(t)​$, which means if there is no singularities, the bicycle will always turn left with periodically changing steering rate. 
+
+However, $\dot{\theta}(t) = \tan(\phi)$ and hence when $\phi = \frac{\pi}{2}$, $\dot{\theta}\to \infty$ and singularity occurs. So when $t = \arccos(1-\pi/2)$, the singularity occurs and the bicycle stops moving.
+
+To prevent the singularity occuring, for $\dot{\phi}(t) = c * \sin(t)$, we should have $\phi(t) = c(1-\cos(t))<\pi/2$. Since $0 \le 1-\cos(t)\le 2$, we should have $c < \pi/4$.
