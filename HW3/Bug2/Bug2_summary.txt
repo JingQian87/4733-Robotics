@@ -1,0 +1,9 @@
+1. Strategy used: Bug 2.
+
+2. Observations:
+` The robot moves quite slowly, however, when I increase the rate, screen shows more frequent results but the movement of the robot is not faster. This may due to the retard of gazebo on the virtual system.
+` The most time cost is when robot leaves an obstacle or turning around corners. So the robot takes the shortest time in the first world where the obstacles are a cube and a ball. For other worlds with larger-perimeter obstacles, the robot takes more time. So I tried to input larger rotation anular speed, but didn't observe significant difference.
+` Only the World2_5 has the no-solution issue. Here we define the hit point re-encountered by meeting distance threshold after sufficient moves. 
+
+3. Videos for different worlds could be seen in following shared link:
+https://drive.google.com/drive/folders/1EiRKY0wN-7oyT5FU-k_H--bAhaQ0sJ8f?usp=sharing
