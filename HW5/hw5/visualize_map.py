@@ -58,4 +58,5 @@ if __name__ == "__main__":
     path = build_obstacle_course(args.obstacle_path, ax)
     start, goal = add_start_and_goal(args.start_goal_path, ax)
 
-    plt.show()
+    plt.savefig('original_map.pdf')
+    #plt.show()
