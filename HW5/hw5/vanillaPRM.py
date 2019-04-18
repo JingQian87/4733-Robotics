@@ -10,6 +10,7 @@
 import numpy as np
 import random, math
 import matplotlib.pyplot as plt 
+from sklearn.neighbors import NearestNeighbors
 
 from visualize_map import *
 
@@ -23,11 +24,27 @@ def generate_graph(path_data, nsample, k):
 	xy_max = [600, 600]
 	while len(V) < nsample:
 		q = np.random.uniform(low=xy_min, high=xy_max, size=(1,2))[0]
-		#print(q)
 		if not path_data.contains_point(q):
 			V.append(q)
-			#print(q)
-	return V
+	#print(V)
+
+	""" Find k nearest neighbors for each node.
+		In the sklearn.neighbors.NearestNeighbors, k=1 returns the point itself.
+		First column of indices is q, and the rest columns are its neighbors' indices.
+		Similarly, the first column of distances is 0, and the rest columns are the distance from q to its k nearest neighbors.
+	"""
+	nbrs = NearestNeighbors(n_neighbors=k+1, algorithm='brute').fit(V)
+	distances, indices = nbrs.kneighbors(V)
+	#print(distances, indices)
+	for i in range(nsample):
+		q = V[i]
+		kindices = indices[i, 1:]
+		#print(q, knbrs)
+		for j in kindices:
+			qj = V[j]
+			if (q, qj) not in E and no collision detected:
+				E.append((q, qj))
+	return V, E
 
 
 #def shortest path():
@@ -39,7 +56,5 @@ if __name__ == "__main__":
 	start, goal = add_start_and_goal(start_goal_file, ax)
 	point = (200,250)
 	a = path.contains_point(point)
-	V = generate_graph(path, 5, 1)
-	xs, ys = [], []
-	for i in range(5)
-	plt.show()
+	V = generate_graph(path, 5, 2)
+
