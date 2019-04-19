@@ -1,4 +1,8 @@
 """
+	To do: Should we add start and goal in the nodes?
+
+	Modified edges to have direction. (A,B) != (B,A)
+
 	Goal: Build a probabilistic roadmap and visualize it on the environment, along with the shortest path. 
 	Steps: 
 		0. import map from visualize_map
@@ -67,7 +71,7 @@ def generate_edges(path_data, nodes, k):
 		#print(q, knbrs)
 		for j in kindices:
 			qj = tuple(nodes[j].tolist())
-			if (q, qj) not in E and (q, qj) not in E:
+			if (q, qj) not in E:# and (q, qj) not in E:
 				for k in E_obs:
 					if intersect(q, qj, k[0], k[1]):
 						break
