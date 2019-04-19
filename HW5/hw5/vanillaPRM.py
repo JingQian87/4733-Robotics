@@ -17,8 +17,8 @@ from visualize_map import *
 obstacle_file = 'world_obstacles.txt'
 start_goal_file = 'start_goal.txt'
 
-def generate_graph(path_data, nsample, k):
-	V, E = [], []
+def generate_node(path_data, nsample):
+	V = []
 	# sample uniformly until have nsample collision-free nodes.
 	xy_min = [0, 0]
 	xy_max = [600, 600]
@@ -26,15 +26,16 @@ def generate_graph(path_data, nsample, k):
 		q = np.random.uniform(low=xy_min, high=xy_max, size=(1,2))[0]
 		if not path_data.contains_point(q):
 			V.append(q)
-	#print(V)
+	return V
 
+def generate_edges(path_data, nodes, k):
 	""" Find k nearest neighbors for each node.
 		In the sklearn.neighbors.NearestNeighbors, k=1 returns the point itself.
 		First column of indices is q, and the rest columns are its neighbors' indices.
 		Similarly, the first column of distances is 0, and the rest columns are the distance from q to its k nearest neighbors.
 	"""
-	nbrs = NearestNeighbors(n_neighbors=k+1, algorithm='brute').fit(V)
-	distances, indices = nbrs.kneighbors(V)
+	nbrs = NearestNeighbors(n_neighbors=k+1, algorithm='brute').fit(nodes)
+	distances, indices = nbrs.kneighbors(nodes)
 	#print(distances, indices)
 	for i in range(nsample):
 		q = V[i]
@@ -44,7 +45,7 @@ def generate_graph(path_data, nsample, k):
 			qj = V[j]
 			if (q, qj) not in E and no collision detected:
 				E.append((q, qj))
-	return V, E
+	return E
 
 
 #def shortest path():
