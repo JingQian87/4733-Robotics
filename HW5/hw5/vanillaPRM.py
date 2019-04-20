@@ -1,15 +1,15 @@
 """
-	To do: Should we add start and goal in the nodes?
-
-	Modified edges to have direction. (A,B) != (B,A)
-
 	Goal: Build a probabilistic roadmap and visualize it on the environment, along with the shortest path. 
 	Steps: 
 		0. import map from visualize_map
-		1. build graph: sample configurations uniformly and use k-nearest-neighbors to find edges.
-		2. graph search (use functions from hw4) 
-		*. plot
-	Notice: Set the number of samples and number of nearest neighbors as free parameters 
+		1. generate nodes: sample configurations uniformly
+		2. use k-nearest-neighbors to find edges.
+		3. add start and goal to the graph and find edges to the map
+		4. graph search (use functions from hw4) 
+	Notice: 
+		1. Set the number of samples and number of nearest neighbors as free parameters 
+		2. The graph may not be connected and could not find path. 
+		3. Due to the randomness of sampling, the shortest path may vary.
 """
 import numpy as np
 import random, math
@@ -91,10 +91,24 @@ def find_sg_knear(point, nodes, k):
 	return knear
 
 def add_start_goal(start, goal, nodes, obs_edges, k_start_goal):
+	newEdge = []
 	knear_start = find_sg_knear(start, nodes, k_start_goal)
 	for i in range(k_start_goal):
 		qj = knear_start[i]
-		#for 
+		for l in obs_edges:
+			if intersect(start, qj, l[0], l[1]):
+				break
+		else:
+			newEdge.append((start, qj))
+	knear_goal = find_sg_knear(goal, nodes, k_start_goal)
+	for i in range(k_start_goal):
+		qj = knear_goal[i]
+		for l in obs_edges:
+			if intersect(goal, qj, l[0], l[1]):
+				break
+		else:
+			newEdge.append((qj, goal))
+	return newEdge
 
 
 
@@ -116,17 +130,18 @@ if __name__ == "__main__":
 	start, goal = add_start_and_goal(start_goal_file, ax)
 	V = generate_nodes(path, 500)
 	E, E_obs = generate_edges(path, V, 5)
-	#E_added = add_start_goal(start, goal, V, E_obs, 5)
-
+	E_added = add_start_goal(start, goal, V, E_obs, 5)
+	for e in E_added:
+		E.append(e)
 	for e in E:
 		ep = Path(e)
-		epatch = patches.PathPatch(ep, facecolor='None', edgecolor='xkcd:blue')
+		epatch = patches.PathPatch(ep, facecolor='None', edgecolor='xkcd:lightblue')
 		ax.add_patch(epatch)
 
-	# points, path_len = new_spath(start, goal, E)
-	# xs = [point[0] for point in points]
-	# ys = [point[1] for point in points]
-	# plt.plot(xs, ys, 'g--', lw=3)
-
-	plt.show()
+	points, path_len = new_spath(start, goal, E)
+	xs = [point[0] for point in points]
+	ys = [point[1] for point in points]
+	plt.plot(xs, ys, 'k--', lw=1)
+	plt.savefig("map_vanillaPRM.pdf")
+	#plt.show()
 
