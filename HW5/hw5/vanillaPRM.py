@@ -72,12 +72,31 @@ def generate_edges(path_data, nodes, k):
 		for j in kindices:
 			qj = tuple(nodes[j].tolist())
 			if (q, qj) not in E:# and (q, qj) not in E:
-				for k in E_obs:
-					if intersect(q, qj, k[0], k[1]):
+				for l in E_obs:
+					if intersect(q, qj, l[0], l[1]):
 						break
 				else:
 					E.append((q, qj))
-	return E
+	return E, E_obs
+
+def find_sg_knear(point, nodes, k):
+	dist = dict()
+	for i in nodes:
+		dist[tuple(i.tolist())] = manhattan_dist(i, point)
+	knear = []
+	for i in range(k):
+		tmp = min(dist, key=dist.get)
+		knear.append(tmp)
+		del dist[tmp]
+	return knear
+
+def add_start_goal(start, goal, nodes, obs_edges, k_start_goal):
+	knear_start = find_sg_knear(start, nodes, k_start_goal)
+	for i in range(k_start_goal):
+		qj = knear_start[i]
+		#for 
+
+
 
 def new_spath(start, goal, edges):
 	# Compute adjacency list
@@ -95,17 +114,19 @@ if __name__ == "__main__":
 	fig, ax = plt.subplots()
 	path = build_obstacle_course(obstacle_file, ax)
 	start, goal = add_start_and_goal(start_goal_file, ax)
-	V = generate_nodes(path, 10)
-	E = generate_edges(path, V, 5)
+	V = generate_nodes(path, 500)
+	E, E_obs = generate_edges(path, V, 5)
+	#E_added = add_start_goal(start, goal, V, E_obs, 5)
+
 	for e in E:
 		ep = Path(e)
 		epatch = patches.PathPatch(ep, facecolor='None', edgecolor='xkcd:blue')
 		ax.add_patch(epatch)
 
-	points, path_len = new_spath(start, goal, E)
-	xs = [point[0] for point in points]
-	ys = [point[1] for point in points]
-	plt.plot(xs, ys, 'g--', lw=3)
+	# points, path_len = new_spath(start, goal, E)
+	# xs = [point[0] for point in points]
+	# ys = [point[1] for point in points]
+	# plt.plot(xs, ys, 'g--', lw=3)
 
 	plt.show()
 
