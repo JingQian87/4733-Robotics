@@ -17,8 +17,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.neighbors import NearestNeighbors
 
-from shortest_path import manhattan_dist
-from vanillaPRM import edges_obstacles, find_sg_knear, generate_nodes, intersect
+from shortest_path import *
+from vanillaPRM import *
 from visualize_map import *
 
 obstacle_file = 'world_obstacles.txt'
@@ -71,6 +71,7 @@ def generate_edges_enhanced(obstacles, nodes, k, d):
 
 def add_edges_for_node(new_node, nodes, obs_edges, k):
     """ Connect a new node to k nearest neighbors in the graph """
+    new_node = tuple(new_node.tolist())
     newEdge = []
     knear = find_sg_knear(new_node, nodes, k)
     for i in range(k):
@@ -90,11 +91,18 @@ if __name__ == "__main__":
     E_obs = edges_obstacles(path) # Array of obstacle edges
     E, weights = generate_edges_enhanced(E_obs, V, K, D)
     # print(weights)
-
+    E_added = add_start_goal(start, goal, V, E_obs, 5)
+    E += E_added
     for e in E:
         ep = Path(e)
         epatch = patches.PathPatch(ep, facecolor='None', edgecolor='xkcd:lightblue')
         ax.add_patch(epatch)
+    
+    points, path_len = new_spath(start, goal, E)
+    xs = [point[0] for point in points]
+    ys = [point[1] for point in points]
+    plt.plot(xs, ys, 'k--', lw=1)
+    print("Path length before enhancement: {}".format(path_len))
 
     ### Randomly pick m nodes to enhance based on weight
     nodes = choices(population=V, weights=weights, k=M)
@@ -118,5 +126,18 @@ if __name__ == "__main__":
                 ep = Path(e)
                 epatch = patches.PathPatch(ep, facecolor='None', edgecolor='xkcd:lightgreen')
                 ax.add_patch(epatch)
+    
+    E_added = add_start_goal(start, goal, V, E_obs, 5)
+    E += E_added
+    for e in E_added:
+        ep = Path(e)
+        epatch = patches.PathPatch(ep, facecolor='None', edgecolor='xkcd:lightgreen')
+        ax.add_patch(epatch)
+    
+    points, path_len = new_spath(start, goal, E)
+    xs = [point[0] for point in points]
+    ys = [point[1] for point in points]
+    plt.plot(xs, ys, 'b--', lw=1)
+    print("Path length after enhancement: {}".format(path_len))
     
     plt.show()
