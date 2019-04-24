@@ -21,15 +21,18 @@ from vanillaPRM import edges_obstacles, intersect, new_spath
 from visualize_map import *
 import os
 
+PAUSE = 0.05
+
 obstacle_file = 'world_obstacles.txt'
 start_goal_file = 'start_goal.txt'
 
-BIAS = .05
+BIAS = 0.05
 D = 30
 MAX_ITERS = 10000
 T = 50
 INITIAL_GROW = 10 
-GROW_GAP = 2
+GROW_GAP = 10
+
 
 xy_min = [0, 0]
 xy_max = [600, 600]
@@ -83,7 +86,7 @@ def grow(gpoint, bias, d, V, E, flag=0):
 				epatch = patches.PathPatch(ep, facecolor='None', edgecolor='xkcd:red')
 			ax.add_patch(epatch)
 			plt.draw()
-			plt.pause(.05)
+			plt.pause(PAUSE)
 			break
 	return V, E
 
@@ -136,7 +139,7 @@ def expand(q1new, flag = 1):
 		epatch = patches.PathPatch(ep, facecolor='None', edgecolor='xkcd:green')
 		ax.add_patch(epatch)
 		plt.draw()
-		plt.pause(.05)
+		plt.pause(PAUSE)
 		return 1
 
 	if mindist < D: # not ready for connection
@@ -161,7 +164,7 @@ def expand(q1new, flag = 1):
 				epatch = patches.PathPatch(ep, facecolor='None', edgecolor='xkcd:green')
 			ax.add_patch(epatch)
 			plt.draw()
-			plt.pause(.05)
+			plt.pause(PAUSE)
 			return expand(q2new, 1-flag)
 
 while num_iters < MAX_ITERS:
