@@ -28,6 +28,24 @@ We evaluate the performance of the algorithm based on path quality (length) and 
 | 5    | 1247.7734005839188 | 1.9075641632080078 |
 | 6    | 1066.330250235014  | 2.356560707092285  |
 
+We also look at the space coverage of some parameter combinations:
+
+(1) $n=300$ and $k=5$
+
+![Figure_9](/Users/cmouse/Documents/Columbia Spring 2019/Robotics/HW5/Figure_9.png)
+
+(2) $n=600$ and $k=5$
+
+![Figure_10](/Users/cmouse/Documents/Columbia Spring 2019/Robotics/HW5/Figure_10.png)
+
+(3) $n=500$ and $k=3$
+
+![Figure_11](/Users/cmouse/Documents/Columbia Spring 2019/Robotics/HW5/Figure_11.png)
+
+(4) $n=500$ and $k=6$
+
+![Figure_12](/Users/cmouse/Documents/Columbia Spring 2019/Robotics/HW5/Figure_12.png)
+
 **Briefly describe your extension to PRM and the improvements you observed, if any. What choices of free parameters did you have and how did you choose them? Include a representative screenshot of a PRM generated with this extended method.** 
 
 We implemented PRM Enhancement by focusing on sampling in regions around nodes with fewer neighbors. For each node $c$, we maintained a weight $w$, which is $\frac{1}{p^2}$, where $p$ is the number of neighbors of $c$ within some predefined distance $d$. We selected nodes to enhance based on their weights, sampled $n$ more nodes within $r$ distance of $c$, and added those nodes to the graph. We choose $m$ nodes to enhance in total.
@@ -99,12 +117,12 @@ In the bidirectional RRT, we let both trees grow 10 iterations and then try to c
 
 1) if we call the connection procedure too rarely, it will waste time in growing unnecessary edges, like the following figure. In this figure, we set the gap = 20, which means between two connections, there are 20 iterations of tree growing. We could see that part of the two trees overlap, which suggests that they may connect long ago.
 
-![Gap20](/Users/mac/Desktop/Robotics/HW5/hw5/Gap20.png)
+![Gap20](/Users/cmouse/Documents/Columbia Spring 2019/Robotics/HW5/hw5/Gap20.png)
 
 2) If we call the connection too often, we will also have a low performance. Like the following figure, we set the gap to 0, which means after one connection failed, we try to connect again. The graph is unbalanced which means that start tree grows a lot and quite randomly while the goal tree grows a little.
 
-![Gap0](/Users/mac/Desktop/Robotics/HW5/hw5/Gap0.png)
+![Gap0](/Users/cmouse/Documents/Columbia Spring 2019/Robotics/HW5/hw5/Gap0.png)
 
 3) With our choice of parameters, the generated result seems good.
 
-![Grow10Gap2](/Users/mac/Desktop/Robotics/HW5/hw5/Grow10Gap2.png)
+![Grow10Gap2](/Users/cmouse/Documents/Columbia Spring 2019/Robotics/HW5/hw5/Grow10Gap2.png)
