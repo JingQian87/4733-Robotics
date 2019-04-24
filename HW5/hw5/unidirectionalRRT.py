@@ -86,7 +86,7 @@ def unidirectionalRRT(start, goal, path, xy_min, xy_max,
             epatch = patches.PathPatch(ep, facecolor='None', edgecolor='xkcd:green')
             ax.add_patch(epatch)
             plt.draw()
-            plt.pause(.2)
+            plt.pause(.05)
 
             # goal test
             # only need to test on newly added nodes!
@@ -124,7 +124,7 @@ if __name__ == "__main__":
     points, path_len = new_spath(start, goal, E)
     xs = [point[0] for point in points]
     ys = [point[1] for point in points]
-    plt.plot(xs, ys, 'b--', lw=1)
+    plt.plot(xs, ys, 'k--', lw=2)
     print("Path length: {}".format(path_len))
     
     plt.ioff()
