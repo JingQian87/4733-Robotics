@@ -31,7 +31,7 @@ D = 30
 MAX_ITERS = 10000
 T = 50
 INITIAL_GROW = 10 
-GROW_GAP = 10
+GROW_GAP = 2
 
 
 xy_min = [0, 0]
