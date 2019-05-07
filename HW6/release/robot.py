@@ -47,38 +47,40 @@ class Robot:
     # Done: Moves a robot
     def move(self, angle_step = 0.1):
         """
-        This function is to update the robot's state according to nonlinear transition function and return the action uk = [10cos(theta_k), 10sin(theta_k), delta_k]
+        This function is to update the robot's state according to nonlinear transition function and return the action uk = [10cos(theta_k), 10sin(theta_k), delta_k] without moving noises.
         The order of move: move angle with angle_step first, then translation.
         Before retun, call sense to determine movable; if not, turn angle until safe to move forward, delta_k = total turning angle.
         """
         self.set_state(self.x, self.y, self.theta)
         forward = 10.0
+        half_diag = 1.42 * landmark_size * 0.5
 
         obstacles = self.sense()
         sensed_landmarks = obstacles[1:]
 
         niter = 0
-        theta_update = self.theta + angle_step + random.gauss(0.0, self.turn_noise) #radius
-        dist = 10.0 + random.gauss(0.0, self.forward_noise)
-        flag = True
-        while flag and niter < 10000:
+        theta_update = self.theta + angle_step
+
+        flag = True        
+        while flag and niter < 100:
             niter += 1
-            x_update = self.x + cos(theta_update) * dist
-            y_update = self.y + sin(theta_update) * dist
+            x_update = self.x + cos(theta_update) * forward
+            y_update = self.y + sin(theta_update) * forward
             # check wall
             if x_update > 0 and x_update < obstacles[0][0]:
                 if y_update > 0 and y_update < obstacles[0][1]:
                     # check landmarks
-                    for i in range(len(obstacles)-1):
+                    for i in range(len(sensed_landmarks)):
                         imark = sensed_landmarks[i]
-                        if imark[0] > dist or imark[0]*abs(theta_update - imark[1]) > 1.42 * landmark_size * 0.5: 
+                        if imark[0] > forward+half_diag or imark[0]*abs(theta_update - imark[1]) > half_diag: 
                             continue # no collision
                         else:
                             break # collision
                     else:
                         flag = False
             theta_update += angle_step
-        return (x_update, y_update, theta_update)
+        # return the action, not updated coordinates
+        return (x_update-self.x, y_update-self.y, theta_update-self.theta)
 
     # Done: Returns a list of range bearing measurements
     def sense(self):
