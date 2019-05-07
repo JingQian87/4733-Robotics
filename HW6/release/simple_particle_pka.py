@@ -21,12 +21,12 @@ class robot:
         self.sense_noise = 0.0;
 
     def set(self, new_x, new_y, new_orientation):
-        if new_x < 0 or new_x >= world_size:
-            raise ValueError, 'X coordinate out of bound'
-        if new_y < 0 or new_y >= world_size:
-            raise ValueError, 'Y coordinate out of bound'
-        if new_orientation < 0 or new_orientation >= 2 * pi:
-            raise ValueError, 'Orientation must be in [0..2pi]'
+        # if new_x < 0 or new_x >= world_size:
+        #     raise ValueError, 'X coordinate out of bound'
+        # if new_y < 0 or new_y >= world_size:
+        #     raise ValueError, 'Y coordinate out of bound'
+        # if new_orientation < 0 or new_orientation >= 2 * pi:
+        #     raise ValueError, 'Orientation must be in [0..2pi]'
         self.x = float(new_x)
         self.y = float(new_y)
         self.orientation = float(new_orientation)
@@ -47,8 +47,8 @@ class robot:
         return Z
             
     def move(self, turn, forward):
-        if forward < 0:
-            raise ValueError, 'Robot cant move backwards'
+        # if forward < 0:
+        #     raise ValueError, 'Robot cant move backwards'
         # turn, and add randomness to the turning command
         orientation = self.orientation + float(turn) + random.gauss(0.0, self.turn_noise)
         orientation %= 2 * pi
@@ -102,9 +102,9 @@ for i in range(N):
     r.set_noise(0.05, 0.05, 5.0) # provided noise.
     p.append(r)
     
-print 'Mean error at start', eval(myrobot, p)
+print('Mean error at start', eval(myrobot, p))
 # show particle's initial locations
-print p    
+print(p)    
 
 for t in range(T):
 #    print p
@@ -135,11 +135,11 @@ for t in range(T):
         p3.append(p[index])
     p = p3
     
-    print 'Mean error',eval(myrobot, p)
+    print('Mean error',eval(myrobot, p))
     
-print ' '
+print(' ')
 if eval(myrobot, p) > 0.0:
     for i in range(N/100):        
-        print 'Final particle #', i*100, p[i*100]
-    print ' '
-    print 'Actual Robot Location', myrobot
+        print('Final particle #', i*100, p[i*100])
+    print(' ')
+    print('Actual Robot Location', myrobot)
