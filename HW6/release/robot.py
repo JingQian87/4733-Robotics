@@ -1,6 +1,4 @@
 """
-    Notice!!! Jing finished Q1 & Q2. In Q1, Jing only consider that the center 
-
     Take the simple_particle_pka.py from Professor Peter Allen's notes as reference.
     Note:
     1. Landmarks are squares centered in (x,y) with landmark_size.
