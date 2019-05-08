@@ -83,9 +83,13 @@ class Robot:
         theta_k = theta_update + random.gauss(0.0, self.turn_noise)
         x_k = cos(theta_k) * dist
         y_k = sin(theta_k) * dist
+        ####
+        dx, dy, dtheta = x_update-self.x, y_update-self.y, theta_update-self.theta
+        ####
         self.set_state(x_k, y_k, theta_k)
         # return the action, not updated coordinates
-        return (x_update-self.x, y_update-self.y, theta_update-self.theta)
+        # return (x_update-self.x, y_update-self.y, theta_update-self.theta)
+        return (dx, dy, dtheta)
 
     # Done: Returns a list of range bearing measurements
     def sense(self):
