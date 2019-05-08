@@ -45,6 +45,23 @@ def init_particles(world_size, number):
 
 # TODO: Move robot, make observation, and move and resample all particles
 def update(robot, particles):
+    """
+    This function should first have the robot move and take a measurement. 
+    Each particle should then move using the robot’s input vector uk and the move particle function 
+    and then get a weight assigned to it.
+    """
+    # Move the robot
+    uk = robot.move()
+
+    # Move the particles
+    for p in particles:
+        p.move_particle(*uk)
+    
+    # Assign weights to particles
+    for p in particles:
+        # expected = p.sen
+        pass
+
     return robot, particles
 
 
