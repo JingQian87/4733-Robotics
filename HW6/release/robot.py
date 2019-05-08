@@ -51,7 +51,6 @@ class Robot:
         The order of move: move angle with angle_step first, then translation.
         Before retun, call sense to determine movable; if not, turn angle until safe to move forward, delta_k = total turning angle.
         """
-        self.set_state(self.x, self.y, self.theta)
         forward = 10.0
         half_diag = 1.42 * landmark_size * 0.5
 
@@ -79,6 +78,12 @@ class Robot:
                     else:
                         flag = False
             theta_update += angle_step
+        # update the coordinates of robot
+        dist = sqrt(x_update**2 + y_update**2) + random.gauss(0.0, self.forward_noise)
+        theta_k = theta_update + random.gauss(0.0, self.turn_noise)
+        x_k = cos(theta_k) * dist
+        y_k = sin(theta_k) * dist
+        self.set_state(x_k, y_k, theta_k)
         # return the action, not updated coordinates
         return (x_update-self.x, y_update-self.y, theta_update-self.theta)
 
