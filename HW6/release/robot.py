@@ -84,9 +84,9 @@ class Robot:
 
     # Done: Returns a list of range bearing measurements
     def sense(self):
-    """
-    The Gaussian noise random variables are all zero-mean and have variance given by range noise for the range measurements and bearing noise for the bearing measurements, respectively (means univariate Gaussian).
-    """
+        """
+        The Gaussian noise random variables are all zero-mean and have variance given by range noise for the range measurements and bearing noise for the bearing measurements, respectively (means univariate Gaussian).
+        """
         world_size, landmarks = read_txt(filename)
         Z = [world_size]
         for i in range(len(landmarks)):
@@ -97,6 +97,23 @@ class Robot:
             Z.append((dist, angle))
         return Z
 
-    # TODO: Move a particle according to the provided input vector
+    # Done: Move a particle according to the provided input vector
     def move_particle(self, dx, dy, dth):
+        """
+        x_k = x_{k-1} + 10cos\\theta_k + w_x
+        y_k = y_{k-1} + 10sin\\theta_k + w_y
+        \\theta_k = \\theta_{k-1} + \Delta\\theta_k + w_{theta}
+        """
         self.set_state(self.x, self.y, self.theta)
+        
+        # Update theta
+        w_theta = random.gauss(0.0, self.range_noise)
+        new_theta = self.theta + dth + w_theta
+
+        # Update x and y
+        w_dist = random.gauss(0.0, self.forward_noise)
+        w_x, w_y = w_dist * cos(new_theta), w_dist * sin(new_theta)
+        new_x = self.x + dx + w_x
+        new_y = self.y + dy + w_y
+        
+        self.set_state(new_x, new_y, new_theta)
