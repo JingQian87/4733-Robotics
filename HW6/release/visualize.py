@@ -54,17 +54,18 @@ def measurement_prob(particle, robot_measurement):
     """ Credit to Prof. Peter Allen! :-) """
     # calculates how likely a measurement should be
     prob = 1.0
+    # prob = 0.0
     
     particle_measurement = particle.sense()
 
-    print("Particle at ({}, {})".format(particle.x, particle.y))
+    # print("Particle at ({}, {})".format(particle.x, particle.y))
 
     # If in landmark or outside environ, assign 0
-    if (not particle.x > 0) or (not particle.x < particle_measurement[0][0]):
-        print("Particle ran away!")
+    if not (particle.x > 0) or not (particle.x < particle_measurement[0][0]):
+        # print("Particle ran away!")
         return 0.0
-    if (not particle.y > 0) or (not particle.y < particle_measurement[0][1]):
-        print("Particle ran away!")
+    if not (particle.y > 0) or not (particle.y < particle_measurement[0][1]):
+        # print("Particle ran away!")
         return 0.0
     
     half_diag = 1.42 * landmark_size * 0.5
@@ -72,11 +73,20 @@ def measurement_prob(particle, robot_measurement):
         if particle_measurement[i][0] < half_diag: # treat each obstacle as circle for simplicity
             return 0.0
 
-    for i in range(1, len(particle_measurement)):
+    for i in range(1, len(particle_measurement)): # use log to avoid overflow
         prob *= Gaussian_prob(particle_measurement[i][0], particle.range_noise, robot_measurement[i][0])
         prob *= Gaussian_prob(particle_measurement[i][1], particle.bearing_noise, robot_measurement[i][1])
+        prob1 = Gaussian_prob(particle_measurement[i][0], particle.range_noise, robot_measurement[i][0])
+        prob2 = Gaussian_prob(particle_measurement[i][1], particle.bearing_noise, robot_measurement[i][1])
+        # print(prob1 * prob2)
+        # if prob1 == 0 or prob2 == 0:
+        #     return 0.0
+        # prob += log(prob1)
+        # prob += log(prob2)
     
+    # print(prob)
     return prob
+    # return exp(prob)
 
 # TODO: Move robot, make observation, and move and resample all particles
 def update(robot, particles):
@@ -103,19 +113,38 @@ def update(robot, particles):
     for p in particles:
         w = measurement_prob(p, Z)
         weights.append(w)
+        # print(w)
         total_weight += w
     
+    # print("Total Weight")
+    # print(total_weight)
     # Normalize weights
-    for w in weights:
-        w /= total_weight
+    # for w in weights:
+    #     w /= total_weight
+    #     print(w)
+    weights = np.array(weights)
+    weights /= weights.sum()
+    # print(weights)
+    # print(weights.max())
     
     # Resample!
     new_particles = []
     N = len(particles)
     for i in range(N):
         new_particles.append(deepcopy(np.random.choice(particles, p=weights)))
+        print(new_particles[-1].x, new_particles[-1].y)
+    
+    # index = int(random.random() * N)
+    # beta = 0.0
+    # mw = max(weights)
+    # for i in range(N):
+    #     beta += random.random() * 2.0 * mw
+    #     while beta > weights[index]:
+    #         beta -= weights[index]
+    #         index = (index + 1) % N
+    #     new_particles.append(deepcopy(particles[index]))
 
-    return robot, particles
+    return robot, new_particles
 
 
 if __name__ == "__main__":
@@ -127,10 +156,12 @@ if __name__ == "__main__":
     world_size, landmarks = read_txt(args.world)
 
     fig, ax = plt.subplots()
-    ax.set_xlim([0,world_size[0]])
+    plt.xlim(0,world_size[0])
     ax.set_ylim([0,world_size[1]])
+    # ax.set_xlim([0,world_size[0]])
+    # ax.set_ylim([0,world_size[1]])
     draw_landmarks(landmarks, ax)
-    ax.axis('equal')
+    #ax.axis('equal')
     plt.ion()
     plt.show()
 
@@ -143,8 +174,11 @@ if __name__ == "__main__":
         p.set_noise(0.5, 0.1, 5.0, 1.0)
 
     for i in range(int(args.num_iterations)):
+        # print(i, robot.x, robot.y)
         draw_bot(robot, ax)
         draw_particles(particles, i, ax)
         plt.draw()
         plt.pause(0.1)
         robot, particles = update(robot, particles)
+    
+    plt.pause(50)

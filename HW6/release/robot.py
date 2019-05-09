@@ -65,6 +65,25 @@ class Robot:
             niter += 1
             x_update = self.x + cos(theta_update) * forward
             y_update = self.y + sin(theta_update) * forward
+            print(x_update, y_update)
+            ####
+            if not (x_update > 0) or not (x_update < obstacles[0][0]):
+                theta_update += angle_step
+                continue
+            if not (y_update > 0) or not (y_update < obstacles[0][1]):
+                theta_update += angle_step
+                continue
+            for i in range(len(sensed_landmarks)):
+                imark = sensed_landmarks[i]
+                if imark[0] > forward+half_diag or imark[0]*abs(theta_update - imark[1]) > half_diag: 
+                    continue # no collision
+                else:
+                    theta_update += angle_step
+                    break # collision
+            else: # didn't break, no collision
+                flag = False
+                break
+            ####
             # check wall
             if x_update > 0 and x_update < obstacles[0][0]:
                 if y_update > 0 and y_update < obstacles[0][1]:
@@ -79,11 +98,15 @@ class Robot:
                         flag = False
             theta_update += angle_step
         # update the coordinates of robot
-        dist = sqrt(x_update**2 + y_update**2) + random.gauss(0.0, self.forward_noise)
-        theta_k = theta_update + random.gauss(0.0, self.turn_noise)
-        x_k = cos(theta_k) * dist
-        y_k = sin(theta_k) * dist
+        # dist = sqrt(x_update**2 + y_update**2) + random.gauss(0.0, self.forward_noise)
+        # theta_k = theta_update + random.gauss(0.0, self.turn_noise)
+        # x_k = cos(theta_k) * dist
+        # y_k = sin(theta_k) * dist
         ####
+        theta_k = theta_update # + random.gauss(0.0, self.turn_noise)
+        forward_noise = random.gauss(0.0, self.forward_noise)
+        x_k = x_update # + forward_noise * cos(theta_k)
+        y_k = y_update # + forward_noise * sin(theta_k)
         dx, dy, dtheta = x_update-self.x, y_update-self.y, theta_update-self.theta
         ####
         self.set_state(x_k, y_k, theta_k)
